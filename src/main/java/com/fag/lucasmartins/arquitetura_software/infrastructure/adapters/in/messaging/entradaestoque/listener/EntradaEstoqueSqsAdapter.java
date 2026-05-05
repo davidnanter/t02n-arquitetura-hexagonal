@@ -1,0 +1,37 @@
+package com.fag.lucasmartins.arquitetura_software.infrastructure.adapters.in.messaging.entradaestoque.listener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.fag.lucasmartins.arquitetura_software.application.ports.in.service.EstoqueServicePort;
+import com.fag.lucasmartins.arquitetura_software.core.domain.bo.AdicionarEstoqueBO;
+import com.fag.lucasmartins.arquitetura_software.infrastructure.adapters.in.messaging.entradaestoque.dto.EntradaEstoqueDTO;
+import com.fag.lucasmartins.arquitetura_software.infrastructure.adapters.in.messaging.entradaestoque.mapper.EntradaEstoqueDTOMapper;
+import com.fag.lucasmartins.arquitetura_software.infrastructure.adapters.in.messaging.exceptions.ConsumerSQSException;
+
+@Component
+public class EntradaEstoqueSqsAdapter {
+
+    private static final Logger log = LoggerFactory.getLogger(EntradaEstoqueSqsAdapter.class);
+
+    private final EstoqueServicePort estoqueServicePort;
+
+    public EntradaEstoqueSqsAdapter(EstoqueServicePort estoqueServicePort) {
+        this.estoqueServicePort = estoqueServicePort;
+    }
+
+    public void receberMensagem(EntradaEstoqueDTO evento) {
+        try {
+            log.info("Evento de entrada de estoque recebido para o produto {}", evento.getProdutoId());
+
+            final AdicionarEstoqueBO bo = EntradaEstoqueDTOMapper.toBo(evento);
+            estoqueServicePort.adicinarEstoque(bo);
+
+            log.info("Entrada de estoque processada para o produto {}", evento.getProdutoId());
+        } catch (Exception e) {
+            log.error("Erro ao processar o evento de entrada do estoque para o produto {}", evento.getProdutoId(), e);
+            throw new ConsumerSQSException("erro ao processar o evento de entrada do estoque para o produto " + evento.getProdutoId(), e);
+        }
+    }
+}

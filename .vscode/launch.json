@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ArquiteturaHexagonalApplication",
+            "request": "launch",
+            "mainClass": "ArquiteturaHexagonalApplication",
+            "projectName": "t02n-arquitetura-software"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot Application",
+            "request": "launch",
+            "mainClass": "com.fag.lucasmartins.arquitetura_software.ArquiteturaHexagonalApplication",
+            "env": {
+                "ACCESS_KEY": "AKIAXZXQFI7SXJJGNX6J",
+                "SECRET_KEY": "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"
+            }
+        }
+    ]
+}
