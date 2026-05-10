@@ -34,6 +34,7 @@ public class SqsPedidoAdapter {
             log.info("Pedido processado com sucesso para o cliente {}", evento.getCustomerId());
         } catch (Exception e) {
             log.error("Erro ao processar o pedido do SQS para o cliente {}", evento.getCustomerId(), e);
+            throw e;
         }
     }
 }
